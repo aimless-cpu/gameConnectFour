@@ -1,6 +1,6 @@
 package com.company;
 
-import java.sql.SQLOutput;
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -33,6 +33,12 @@ public class Main {
 
             printPlayField(playField);
 
+            hasWinnerHorizontal(playerActive, playerSymbol, playFieldEmptySlot);
+
+            if (hasWinnerHorizontal(playerActive, playerSymbol, playFieldEmptySlot)) {
+                System.out.println("Winner");
+            }
+
 
 
 
@@ -40,6 +46,27 @@ public class Main {
         }
 
 
+    }
+    private static  boolean hasWinner() {
+            return false;
+    }
+
+    private static boolean hasWinnerHorizontal(int playerActive, char[] playerSymbol, char playFieldEmptySlot) {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLUMNS; c++) {
+                if (playField[c][r] == playerSymbol[playerActive]) {
+                    for (int c2 = c; c2 < c + 4; c2++) {
+                        if (playField[c2][r] == playFieldEmptySlot) {
+                            break;
+                        }
+                        else if (playField[c2][r] == playerSymbol[playerActive] && c2 == c + 3) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private static int setPlayerInput(char playFieldEmptySlot, int playerActive, int userInput, int[] playerNumber, char[] playerSymbol) {
@@ -50,7 +77,7 @@ public class Main {
                     playerActive++;
                     break;
                 } else {
-                    playerActive =0;
+                    playerActive = 0;
                     break;
                 }
             }
