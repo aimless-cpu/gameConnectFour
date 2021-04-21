@@ -23,23 +23,13 @@ public class Main {
 
         while (true) {
 
-            int userInput = sc.nextInt();
+            int playerInput = sc.nextInt();
 
-            int[] playerNumber = {0,1};
-            char[] playerSymbol = {'o','x'};
+            int[] playerNumber = {0,1,2};
+            char[] playerSymbol = {'o','x','z'};
 
 
-
-            for (int i = 5; i>=0; i -= 1) {
-                if (playField[userInput][i] == playFieldEmptySlot) {
-                    playField[userInput][i] = playerSymbol[playerActive];
-                    if (playerActive<playerNumber.length) {
-                        playerActive++;
-                    } else {
-                        playerActive=0;
-                    }
-                }
-            }
+            playerActive = setPlayerInput(playFieldEmptySlot, playerActive, playerInput, playerNumber, playerSymbol);
 
             printPlayField(playField);
 
@@ -50,6 +40,22 @@ public class Main {
         }
 
 
+    }
+
+    private static int setPlayerInput(char playFieldEmptySlot, int playerActive, int userInput, int[] playerNumber, char[] playerSymbol) {
+        for (int i = 5; i>=0; i -= 1) {
+            if (playField[userInput][i] == playFieldEmptySlot) {
+                playField[userInput][i] = playerSymbol[playerActive];
+                if (playerActive < playerNumber.length-1) {
+                    playerActive++;
+                    break;
+                } else {
+                    playerActive =0;
+                    break;
+                }
+            }
+        }
+        return playerActive;
     }
 
     private static void fillPlayField(char playFieldFiller) {
