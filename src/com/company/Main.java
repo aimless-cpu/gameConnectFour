@@ -1,6 +1,5 @@
 package com.company;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -30,7 +29,7 @@ public class Main {
             char[] playerSymbol = {'o','x'};
 
 
-            playerActive = setPlayerInput(playFieldEmptySlot, playerActive, playerInput, playerNumber, playerSymbol);
+            setPlayerInput(playFieldEmptySlot, playerActive, playerInput, playerSymbol);
 
             printPlayField(playField);
 
@@ -57,18 +56,27 @@ public class Main {
     }
 
     private static boolean hasWinner(int playerActive, char[] playerSymbol) {
-        if (hasWinnerHorizontal(playerActive, playerSymbol)) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return hasWinnerHorizontal(playerActive, playerSymbol) || hasWinnerVertical(playerActive, playerSymbol) || hasWinnerDiagonal(playerActive, playerSymbol);
     }
 
+    private static boolean hasWinnerDiagonal(int playerActive, char[] playerSymbol) {
+        for (int r = 0; r < ROWS-3; r++) {
+            for (int c = 0; c < COLUMNS-3; c++) {
+                if (playField[c][r] == playerSymbol[playerActive]) {
+                    for (int c2 = c; c2 < c + 4; c2++) {
+                        for (int r2 = r; r2 < r +4; r2++) {
+                            if (playField[c2][r2] != playerSymbol[playerActive] && r2 == r + 3) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return  false;
+    }
 
-
-
-    private static  boolean hasWinnerVertical(int playerActive, char[] playerSymbol) {
+    private static boolean hasWinnerVertical(int playerActive, char[] playerSymbol) {
         for (int c = 0; c < COLUMNS; c++) {
             for (int r = 0; r < ROWS-3; r++) {
                 if (playField[c][r] == playerSymbol[playerActive]) {
@@ -102,21 +110,13 @@ public class Main {
         return false;
     }
 
-    private static int setPlayerInput(char playFieldEmptySlot, int playerActive, int userInput, int[] playerNumber, char[] playerSymbol) {
+    private static void setPlayerInput(char playFieldEmptySlot, int playerActive, int userInput, char[] playerSymbol) {
         for (int i = 5; i>=0; i -= 1) {
             if (playField[userInput][i] == playFieldEmptySlot) {
                 playField[userInput][i] = playerSymbol[playerActive];
-                break; // not needed if break in followed commented block
-/*                if (playerActive < playerNumber.length-1) {
-                    playerActive++;
-                    break;
-                } else {
-                    playerActive = 0;
-                    break;
-                }*/
+                break;
             }
         }
-        return playerActive;
     }
 
     private static void fillPlayField(char playFieldFiller) {
