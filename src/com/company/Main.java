@@ -12,6 +12,7 @@ public class Main {
     static char[][] playField = new char[COLUMNS][ROWS];
 
     public static void main(String[] args) {runGame();}
+
     public static void runGame() {
 
         char playFieldEmptySlot = '*';
@@ -25,41 +26,73 @@ public class Main {
 
             int playerInput = sc.nextInt();
 
-            int[] playerNumber = {0,1,2};
-            char[] playerSymbol = {'o','x','z'};
+            int[] playerNumber = {0,1};
+            char[] playerSymbol = {'o','x'};
 
 
             playerActive = setPlayerInput(playFieldEmptySlot, playerActive, playerInput, playerNumber, playerSymbol);
 
             printPlayField(playField);
 
-            hasWinnerHorizontal(playerActive, playerSymbol, playFieldEmptySlot);
-
-            if (hasWinnerHorizontal(playerActive, playerSymbol, playFieldEmptySlot)) {
+            if (hasWinner(playerActive, playerSymbol)) {
                 System.out.println("Winner");
+                System.exit(0);
             }
 
-
-
+            playerActive = iteratePlayerActive(playerActive, playerNumber);
 
 
         }
 
 
     }
-    private static  boolean hasWinner() {
-            return false;
+
+    private static int iteratePlayerActive(int playerActive, int[] playerNumber) {
+        if (playerActive < playerNumber.length - 1) {
+            playerActive++;
+        } else {
+            playerActive = 0;
+        }
+        return playerActive;
     }
 
-    private static boolean hasWinnerHorizontal(int playerActive, char[] playerSymbol, char playFieldEmptySlot) {
+    private static boolean hasWinner(int playerActive, char[] playerSymbol) {
+        if (hasWinnerHorizontal(playerActive, playerSymbol)) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+
+
+
+    private static  boolean hasWinnerVertical(int playerActive, char[] playerSymbol) {
+        for (int c = 0; c < COLUMNS; c++) {
+            for (int r = 0; r < ROWS-3; r++) {
+                if (playField[c][r] == playerSymbol[playerActive]) {
+                    for (int r2 = r; r2 < r + 4; r2++) {
+                        if (playField[c][r2] != playerSymbol[playerActive]) {
+                            break;
+                        } else if (playField[c][r2] == playerSymbol[playerActive] && r2 == r + 3)
+                            return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private static boolean hasWinnerHorizontal(int playerActive, char[] playerSymbol) {
         for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLUMNS; c++) {
+            for (int c = 0; c < COLUMNS-3; c++) {
                 if (playField[c][r] == playerSymbol[playerActive]) {
                     for (int c2 = c; c2 < c + 4; c2++) {
-                        if (playField[c2][r] == playFieldEmptySlot) {
+                        if (playField[c2][r] != playerSymbol[playerActive]) { // BUG must be != playerSymbol
                             break;
-                        }
-                        else if (playField[c2][r] == playerSymbol[playerActive] && c2 == c + 3) {
+                        } else if (playField[c2][r] == playerSymbol[playerActive] && c2 == c + 3) {
                             return true;
                         }
                     }
@@ -73,13 +106,14 @@ public class Main {
         for (int i = 5; i>=0; i -= 1) {
             if (playField[userInput][i] == playFieldEmptySlot) {
                 playField[userInput][i] = playerSymbol[playerActive];
-                if (playerActive < playerNumber.length-1) {
+                break; // not needed if break in followed commented block
+/*                if (playerActive < playerNumber.length-1) {
                     playerActive++;
                     break;
                 } else {
                     playerActive = 0;
                     break;
-                }
+                }*/
             }
         }
         return playerActive;
